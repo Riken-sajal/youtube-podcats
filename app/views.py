@@ -6,9 +6,15 @@ from utils.rss_feed import create_rss_feed
 from django.http import JsonResponse, HttpResponse
 import os, json
 from driver.bot import Driver_bot
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 class RunScript(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         output_dir = os.path.join(os.getcwd(), 'media/audio_files')
         os.makedirs(output_dir, exist_ok=True)
