@@ -1,6 +1,5 @@
 from feedgen.feed import FeedGenerator
 
-
 def create_rss_feed(audio_files, base_url):
     fg = FeedGenerator()
     fg.load_extension('podcast')
