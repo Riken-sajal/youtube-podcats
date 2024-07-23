@@ -1,0 +1,9 @@
+etc
+media
+db.sqlite3
+
+
+# add migrations file
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
