@@ -9,7 +9,7 @@ AUDIO_DIR=media/audio_files
 DB_FILE=db.sqlite3
 
 # Virtual environment activation
-VENV=~/ENVs/Podcast_seed/bin/activate
+VENV=~/Workspace/youtube-podcats/bin/activate
 
 # Clean all audio files
 clean-audio:
@@ -29,5 +29,7 @@ clean-migrate: clean-audio clean-db migrate
 
 # Run the Django development server
 runserver:
+	. $(VENV) && gunicorn --workers 3 --timeout 3000 --bind 0.0.0.0:8000 podcast.wsgi:application
+
+kill-server:
     kill -9 `sudo lsof -t -i:8000`
-	. $(VENV) && gunicorn --workers 3 --timeout 3000 --bind 0.0.0.0:8000 scrapping.wsgi:application
