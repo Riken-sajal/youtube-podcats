@@ -1,6 +1,5 @@
 from feedgen.feed import FeedGenerator
 import os
-import datetime
 
 
 def create_rss_feed(audio_files, base_url):
@@ -20,8 +19,6 @@ def create_rss_feed(audio_files, base_url):
     fg.podcast.itunes_subtitle('Your podcast subtitle')
     fg.podcast.itunes_owner(name='Your Name', email='your.email@example.com')
     fg.podcast.itunes_new_feed_url(base_url + '/podcast/rss-feed/')
-
-    fg.load_extension('content')
 
     for audio_file in audio_files:
         fe = fg.add_entry()

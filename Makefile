@@ -29,4 +29,5 @@ clean-migrate: clean-audio clean-db migrate
 
 # Run the Django development server
 runserver:
-	. $(VENV) && python manage.py runserver
+    kill -9 `sudo lsof -t -i:8000`
+	. $(VENV) && gunicorn --workers 3 --timeout 3000 --bind 0.0.0.0:8000 scrapping.wsgi:application
