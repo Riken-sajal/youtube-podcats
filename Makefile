@@ -9,7 +9,7 @@ AUDIO_DIR=media/audio_files
 DB_FILE=db.sqlite3
 
 # Virtual environment activation
-VENV=~/Workspace/youtube-podcats/bin/activate
+VENV=~/youtube-podcats/bin/activate
 
 # Clean all audio files
 clean-audio:
