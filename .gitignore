@@ -1,7 +1,7 @@
 etc
 media
 db.sqlite3
-
+Makefile
 
 # add migrations file
 **/migrations/**
