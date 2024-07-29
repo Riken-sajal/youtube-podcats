@@ -7,19 +7,18 @@ import datetime
 def create_rss_feed(audio_files, base_url):
     fg = FeedGenerator()
 
-    # Add the necessary namespaces
-    fg.rss_str(pretty=True)
-    fg.load_extension('podcast')
-    fg.load_extension('atom')
-    fg.load_extension('content')
-
+    # Set required channel elements first
     fg.title('YouTube Audio Feed')
     fg.link(href=base_url, rel='self')
     fg.description('A feed of audio files downloaded from YouTube')
     fg.language('en')
+
+    # Load the podcast extension
+    fg.load_extension('podcast')
+
+    # Add iTunes specific tags
     fg.podcast.itunes_category('Technology', 'Podcasting')
     fg.podcast.itunes_explicit('no')
-
     fg.podcast.itunes_author('Your Name')
     fg.podcast.itunes_image(base_url + '/media/cover_imgs/csvvc.jpg')
     fg.podcast.itunes_summary('A summary of your podcast.')
