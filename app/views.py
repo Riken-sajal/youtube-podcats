@@ -22,14 +22,15 @@ class RunScript(View):
 
             driver_cls = Driver_bot()
             video_urls = driver_cls.main(channel_name)
+            driver_cls.Close_driver()
             if not video_urls:
                 return JsonResponse({'error': 'No videos found for this channel'}, status=404)
 
-            output_dir = os.path.join(os.getcwd(), 'media/audio_files')
+            output_dir = os.path.join(os.getcwd(), 'media')
             os.makedirs(output_dir, exist_ok=True)
 
             # Schedule the background task
-            process_video_urls.delay(video_urls, output_dir)
+            process_video_urls(video_urls, output_dir)
 
             return JsonResponse({'message': 'Audio files download started in background'}, status=200)
         except json.JSONDecodeError:

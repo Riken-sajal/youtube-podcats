@@ -1,5 +1,6 @@
 import os
 import yt_dlp as youtube_dl
+from mutagen.mp3 import MP3
 
 def get_video_metadata(video_url):
     ydl_opts = {
@@ -31,4 +32,12 @@ def download_youtube_audio(video_url, output_dir):
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(video_url, download=True)
-        return info['title'] + '.mp3'
+        file_path = os.path.join(output_dir, f"{info['title']}.mp3")
+        audio = MP3(file_path)
+        length_in_seconds = int(audio.info.length)
+        
+        
+        return {
+            'file_path': file_path,
+            'length_in_seconds': length_in_seconds
+        }

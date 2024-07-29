@@ -22,7 +22,7 @@ class Driver_bot(Driver_class):
         old_len_videos = 0
 
         while True:
-            for _ in range(3):
+            for _ in range(2):
                 videos_grid = self.find_element('Videos grid',
                                                 '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]')
                 if not videos_grid: continue
@@ -56,13 +56,20 @@ class Driver_bot(Driver_class):
         self.load_all_videos(channel_name)
         videos_grids = self.driver.find_elements(By.XPATH,
                                                  '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]/*')
-        for grid in videos_grids:
-            for video in grid.find_elements(By.XPATH, './/*[@id="contents"]/*'):
-                video_link = video.find_element(By.XPATH, './/a[@id="video-title-link"]').get_attribute('href')
-                if not video_link in self.videos_link:
-                    self.videos_link.append(video_link)
-
-        return self.videos_link
-
+        for _ in range(3):
+            try :
+                for grid in videos_grids:
+                    for video in grid.find_elements(By.XPATH, './/*[@id="contents"]/*'):
+                        video_link = video.find_element(By.XPATH, './/a[@id="video-title-link"]').get_attribute('href')
+                        if not video_link in self.videos_link:
+                            self.videos_link.append(video_link)
+                return self.videos_link
+            except : ...
+        return False
+    
     def main(self, channel_name):
-        return self.collect_videos_link(channel_name)
+        vid_link_li = []
+        for _ in range(3) :
+            vid_link_li = self.collect_videos_link(channel_name)
+            if not vid_link_li : continue
+            return vid_link_li
