@@ -6,7 +6,12 @@ import datetime
 
 def create_rss_feed(audio_files, base_url):
     fg = FeedGenerator()
+
+    # Add the necessary namespaces
+    fg.rss_str(pretty=True)
     fg.load_extension('podcast')
+    fg.load_extension('atom')
+    fg.load_extension('content')
 
     fg.title('YouTube Audio Feed')
     fg.link(href=base_url, rel='self')
