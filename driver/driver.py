@@ -5,29 +5,38 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException,ElementNotInteractableException,NoSuchElementException,WebDriverException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class Driver_class():
 
 
-    def __init__(self):
+    def __init__(self,Apple_profile = False):
+        # path for diffrent directories and other files
         self.download_path = os.path.join(os.getcwd(),'downloads')
         self.base_path = os.getcwd()
-        self.driver_args()
-        self.timeout = 10
-        self.get_driver()
-        self.wait_obj = WebDriverWait(self.driver, self.timeout)
-        self.data = {}
-        self.actions = ActionChains(self.driver)
-        self.options = ''
+        self.cookies_file_path = os.path.join(self.base_path, 'cookies.json')
 
-    def driver_args(self):
+        # other variables to use later
+        self.timeout = 10
+        self.data = {}
+        self.options = ''
+        self.Apple_profile = Apple_profile
+
+        # open the driver
+        self.driver_args(Apple_profile)
+        self.get_driver(Apple_profile)
+
+        # diffrent variable to use late and need to open driver first to define it.
+        self.wait_obj = WebDriverWait(self.driver, self.timeout)
+        self.actions = ActionChains(self.driver)
+
+    def driver_args(self, Apple_profile):
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--headless")
+        # self.options.add_argument("--headless")
         self.options.add_argument("--no-sandbox")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
-        self.options.add_argument("--incognito")
         self.options.add_argument('--lang=en')
         self.options.add_argument("--enable-webgl-draft-extensions")
         self.options.add_argument('--mute-audio')
@@ -50,13 +59,46 @@ class Driver_class():
             'safebrowsing.enabled': True
         }
         self.options.add_experimental_option("prefs", prefs)
+
+        if Apple_profile :
+
+            # defining the profile directory path and if not exists directory then it will create
+            profile_directory_path = os.path.join(self.base_path,'Apple_Profile')
+            os.makedirs(profile_directory_path,exist_ok=True)
+
+            # Add the profile arguments
+            self.options.add_argument(
+                f"--user-data-dir={profile_directory_path}")
+            self.options.add_argument(r'--profile-directory=Profile 1')
+        else :
+            self.options.add_argument("--incognito")
+
         return  self.options
 
-    def get_driver(self):
+    def get_driver(self,Apple_profile):
         if not self.options in locals() :
-            self.driver_args()
+            self.driver_args(Apple_profile)
         self.driver = webdriver.Chrome(options=self.options)
+
+
         self.driver.maximize_window()
+
+    def save_cookies(self):
+        """Save cookies to a file."""
+        cookies = self.driver.get_cookies()
+        with open(self.cookies_file_path, 'w') as f:
+            json.dump(cookies, f)
+        print(f"Cookies saved to {self.cookies_file_path}")
+
+    def load_cookies(self):
+        """Load cookies from a file."""
+
+        with open(self.cookies_file_path, 'r') as f:
+            cookies = json.load(f)
+            for cookie in cookies:
+                self.driver.add_cookie(cookie)
+
+        print(f"Cookies loaded from {self.cookies_file_path}")
 
     def move_to_element(self, element):
         """this function will move to the element and make visible on the screen"""
@@ -68,6 +110,11 @@ class Driver_class():
         self.actions.move_to_element(element).perform()
 
     def random_sleep(self, a=5, b=8):
+        """
+        Random sleep time for few secounds
+        Defualt secounds are 5 to 8 secounds
+        """
+
         random_sleep_time = random.randint(a, b)
         print(f"random_sleep : {random_sleep_time}")
         time.sleep(random_sleep_time)
@@ -101,6 +148,13 @@ class Driver_class():
             else:
                 print(f'Cannot find the element: {element}')
 
+    def ensure_click(self, element: WebElement, timeout=3):
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(element))
+            element.click()
+        except WebDriverException:
+            self.driver.execute_script("arguments[0].click();", element)
+
     def click_element(self, element, locator, locator_type=By.XPATH,
                       timeout=10):
         """Find an element, then click and return it, or return None"""
@@ -122,14 +176,20 @@ class Driver_class():
         if ele:
             for i in range(3):
                 try:
+                    ele.clear()
                     ele.send_keys(text)
                     print(f'Inputed "{text}" for the element: {element}')
                     return ele
                 except ElementNotInteractableException:
-                    ...
+                    print(" Error : ElementNotInteractableException")
+                except Exception as e :
+                    print(e)
+
 
     def ScrollDown(self, px):
         self.driver.execute_script(f"window.scrollTo(0, {px})")
         
     def Close_driver(self):
-        self.driver.quit()
+        if self.Apple_profile :
+            self.save_cookies()
+        self.driver.close()

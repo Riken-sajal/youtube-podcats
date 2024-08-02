@@ -1,0 +1,9 @@
+[31087:31087:0801/065416.798459:WARNING:chrome_main_delegate.cc(744)] This is Chrome version 127.0.6533.72 (not a warning)
+[31087:31087:0801/065416.941895:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[31087:31087:0801/065416.959514:WARNING:browser_management_service.cc(128)] EnterpriseLogoUrl fetch failed with error code -1 and MIME type 
+[31087:31087:0801/065417.054186:WARNING:browser_management_service.cc(128)] EnterpriseLogoUrl fetch failed with error code -1 and MIME type 
+[31087:31087:0801/065417.065361:WARNING:bluez_dbus_manager.cc(248)] Floss manager not present, cannot set Floss enable/disable.
+[31124:31124:0801/065417.140250:WARNING:sandbox_linux.cc(430)] InitializeSandbox() called with multiple threads in process gpu-process.
+[31087:31087:0801/065430.133076:WARNING:controller_impl.cc(1192)] Background download complete, client: 6, completion type: 0, file size:265059
+[31087:31087:0801/065430.133521:WARNING:controller_impl.cc(1192)] Background download complete, client: 6, completion type: 0, file size:5152
+[31087:31087:0801/065430.347476:WARNING:pref_notifier_impl.cc(41)] Pref observer for media_router.cast_allow_all_ips found at shutdown.

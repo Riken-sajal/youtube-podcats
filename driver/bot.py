@@ -58,12 +58,14 @@ class Driver_bot(Driver_class):
                                                  '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]/*')
         for _ in range(3):
             try :
+
                 for grid in videos_grids:
-                    for video in grid.find_elements(By.XPATH, './/*[@id="contents"]/*'):
+                    for video in grid.find_elements(By.XPATH, './/*[@id="content"]/*'):
                         video_link = video.find_element(By.XPATH, './/a[@id="video-title-link"]').get_attribute('href')
                         if not video_link in self.videos_link:
                             self.videos_link.append(video_link)
-                return self.videos_link
+
+                return self.videos_link[:3]
             except : ...
         return False
     

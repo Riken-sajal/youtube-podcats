@@ -2,6 +2,7 @@ from feedgen.feed import FeedGenerator
 import os
 from mutagen.mp3 import MP3
 import datetime
+import urllib.parse
 
 
 def create_rss_feed(audio_files, base_url):
@@ -28,14 +29,17 @@ def create_rss_feed(audio_files, base_url):
 
     for audio_file in audio_files:
         audio_file_path = base_url + '/' + audio_file.media_path
-        fe = fg.add_entry()
+        encoded_audio_file_path = urllib.parse.quote(audio_file_path, safe=':/')
 
-        fe.link(href=audio_file_path)
+        fe = fg.add_entry()
+        fe.guid(encoded_audio_file_path)
+        fe.link(href=encoded_audio_file_path)
         fe.title(audio_file.title)
         fe.description(audio_file.description)
 
         # Ensure URL has a valid file extension
-        file_url_with_extension = audio_file_path if audio_file_path.endswith('.mp3') else audio_file_path + '.mp3'
+        file_url_with_extension = encoded_audio_file_path if encoded_audio_file_path.endswith(
+            '.mp3') else encoded_audio_file_path + '.mp3'
 
         fe.enclosure(url=file_url_with_extension, length=str(os.path.getsize(audio_file.file.path)), type="audio/mpeg")
 
