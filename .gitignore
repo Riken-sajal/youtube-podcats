@@ -2,7 +2,7 @@ etc
 media
 db.sqlite3
 Makefile
-
+Apple_Profile
 # add migrations file
 **/migrations/**
 !**/migrations
