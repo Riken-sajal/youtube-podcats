@@ -1,5 +1,5 @@
 import time
-
+from app.models import AudioFile
 from driver.driver import Driver_class
 from selenium.webdriver.common.by import By
 
@@ -8,11 +8,8 @@ class Driver_bot(Driver_class):
 
     def load_all_videos(self, channel_name=""):
         def need_break(new_len_videos, old_len_videos):
-            if new_len_videos != old_len_videos:
-                old_len_videos = new_len_videos
-                return False
-            else:
-                return True
+            return new_len_videos == old_len_videos
+
 
         self.videos_link = []
 
@@ -30,19 +27,19 @@ class Driver_bot(Driver_class):
                 new_len_videos = len(self.driver.find_elements(By.XPATH,
                                                                '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]/*'))
                 try:
-
                     for _ in range(2):
                         try:
                             spinner_grid = self.find_element('Load video spinner',
                                                              '//tp-yt-paper-spinner[@id="spinner"]', timeout=2)
+
                             if spinner_grid:
                                 self.driver.execute_script("arguments[0].scrollIntoView(true);", spinner_grid)
+                                self.random_sleep(2, 4)
+
                                 break
                         except:
-                            if need_break(new_len_videos, old_len_videos): break
                             self.random_sleep(2, 4)
                 except:
-                    if need_break(new_len_videos, old_len_videos): break
                     self.random_sleep(2, 4)
 
             print(new_len_videos, old_len_videos)
@@ -56,6 +53,7 @@ class Driver_bot(Driver_class):
         self.load_all_videos(channel_name)
         videos_grids = self.driver.find_elements(By.XPATH,
                                                  '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]/*')
+
         for _ in range(3):
             try :
 

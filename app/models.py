@@ -17,3 +17,7 @@ class AudioFile(models.Model):
     def __str__(self):
         self.media_path = os.path.join('media','audio_files',self.title)
         return self.title
+
+class TwoFactorCode(models.Model):
+    code = models.CharField(max_length=6, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)

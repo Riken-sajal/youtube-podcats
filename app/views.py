@@ -3,11 +3,10 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from utils.rss_feed import create_rss_feed
-from app.models import AudioFile
-import os
-import json
+from app.models import AudioFile, TwoFactorCode
+from django.utils import timezone
+import os, json
 from driver.bot import Driver_bot
-from driver.Upload_podcast import upload_podcast
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from utils.tasks import process_video_urls
@@ -44,3 +43,18 @@ class GenerateRSSFeed(View):
         base_url = request.build_absolute_uri('/')[:-1]
         rss_feed_content = create_rss_feed(audio_files, base_url)
         return HttpResponse(rss_feed_content, content_type='application/rss+xml')
+
+two_factor_code = None
+
+@csrf_exempt
+def submit_2fa_code(request):
+    global two_factor_code
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        code = data.get('code')
+        if code:
+            TwoFactorCode.objects.all().delete()  # Clear previous codes
+            TwoFactorCode.objects.create(code=code, created_at=timezone.now())
+            return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'failed'}, status=400)
+
