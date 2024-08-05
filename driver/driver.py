@@ -92,14 +92,15 @@ class Driver_class():
 
     def load_cookies(self):
         """Load cookies from a file."""
+        try :
+            with open(self.cookies_file_path, 'r') as f:
+                cookies = json.load(f)
+                for cookie in cookies:
+                    self.driver.add_cookie(cookie)
 
-        with open(self.cookies_file_path, 'r') as f:
-            cookies = json.load(f)
-            for cookie in cookies:
-                self.driver.add_cookie(cookie)
-
-        print(f"Cookies loaded from {self.cookies_file_path}")
-
+            print(f"Cookies loaded from {self.cookies_file_path}")
+        except Exception as e:
+            print(f"Error : {e} \nCookies could not load")
     def move_to_element(self, element):
         """this function will move to the element and make visible on the screen"""
 
