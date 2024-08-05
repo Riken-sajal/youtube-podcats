@@ -29,6 +29,7 @@ def process_video_urls(video_urls, output_dir):
             time.sleep(random.randint(5,10))
             length_in_seconds = download_info['length_in_seconds']
             cover_image_path = os.path.join(output_dir,'cover_imgs', "csvvc.jpg")
+            breakpoint()
             AudioFile.objects.create(
                 title=metadata['title'],
                 description=metadata['description'],
@@ -37,7 +38,7 @@ def process_video_urls(video_urls, output_dir):
                 length_in_seconds=length_in_seconds,
                 cover_image=cover_image_path,
                 youtube_url=video_url,
-                media_path=os.path.join('media','audio_files',metadata['title'])
+                media_path=new_video_path
                 
             )
         except Exception as e:

@@ -54,6 +54,8 @@ class Driver_bot(Driver_class):
         videos_grids = self.driver.find_elements(By.XPATH,
                                                  '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-browse/ytd-two-column-browse-results-renderer/div[1]/ytd-rich-grid-renderer/div[6]/*')
 
+
+        breakpoint()
         for _ in range(3):
             try :
 
@@ -63,7 +65,7 @@ class Driver_bot(Driver_class):
                         if not video_link in self.videos_link:
                             self.videos_link.append(video_link)
 
-                return self.videos_link[:3]
+                return self.videos_link[:3] if len(self.videos_link) else self.videos_link
             except : ...
         return False
     
