@@ -64,7 +64,7 @@ class Driver_bot(Driver_class):
                         if not video_link in self.videos_link:
                             self.videos_link.append(video_link)
 
-                return self.videos_link[:3] if len(self.videos_link) else self.videos_link
+                return self.videos_link[:3] if len(self.videos_link) > 3 else self.videos_link
             except : ...
         return False
     
