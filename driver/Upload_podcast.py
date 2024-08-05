@@ -1,6 +1,6 @@
 from driver.driver import Driver_class
 from selenium.webdriver.common.by import By
-from config import APPLE_USERNAME, APPLE_PASSWORD
+from config import APPLE_USERNAME, APPLE_PASSWORD, SERVER_IP
 import json, time
 from app.models import  TwoFactorCode
 from django.test import RequestFactory
@@ -62,6 +62,7 @@ class upload_podcast(Driver_class):
             if self.find_element('Two-factor auth input', 'form-security-code-inputs', By.CLASS_NAME):
                 two_fact_inputs = self.driver.find_element(By.XPATH, '//div[@class="form-security-code-inputs"]')
 
+                TwoFactorCode.objects.all().delete()
                 print("Waiting for the two-factor authentication code...")
                 while True:
                     two_factor_code = TwoFactorCode.objects.last()
@@ -107,6 +108,20 @@ class upload_podcast(Driver_class):
             self.click_element('add podcast New show', "//button[contains(text(), 'New Show')]")
 
             self.click_element("add show with rss", "addFromFeed", By.ID)
+            self.click_element("add show with rss", "createNew", By.ID)
+
             self.click_element('add podcast New show', "//button[contains(text(), 'Next')]")
-            self.input_text(rss_feed_content.decode("utf-8"), "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
+
+            if SERVER_IP.endswith('/') :
+                SERVER_IP = SERVER_IP[:-1]
+            self.input_text(f"{SERVER_IP}/podcast/rss-feed/", "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
+
+            if self.find_element('add btn', "//button[contains(text(), 'Add')]") :
+                self.random_sleep()
+                if self.driver.find_elements(By.XPATH,"//button[contains(text(), 'Add')]"):
+                    self.driver.find_elements(By.XPATH, "//button[contains(text(), 'Add')]")[-1].click()
+
+
         breakpoint()
+
+
