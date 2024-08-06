@@ -92,7 +92,6 @@ class upload_podcast(Driver_class):
 
 
         self.driver.get('https://podcastsconnect.apple.com/')
-        breakpoint()
         Podcast_title = self.find_element('Podcast_title', "//h1[contains(text(), 'Podcasts')]")
         if Podcast_title:
             self.click_element('+ Podcast btn', "//h1/div/button")
@@ -128,6 +127,7 @@ class upload_podcast(Driver_class):
                 self.driver.find_elements(By.XPATH, "//button[contains(text(), 'Save')]")[-1].click()
 
             if self.find_element('add podcast New show', "//p[contains(text(), 'We’re still processing your show details. Check back later and then click Publish.')]") :
+                self.random_sleep(10,15)
                 return True
 
 
