@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException,ElementNotInteractableException,NoSuchElementException,WebDriverException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-
+from utils.extend_exp import expiry_extend
 
 class Driver_class():
 
@@ -86,6 +86,11 @@ class Driver_class():
     def save_cookies(self):
         """Save cookies to a file."""
         cookies = self.driver.get_cookies()
+
+        for cookie in cookies :
+            if "expiry" in cookie.keys() :
+                cookie["expiry"] = expiry_extend(cookie["expiry"], 24)
+
         with open(self.cookies_file_path, 'w') as f:
             json.dump(cookies, f)
         print(f"Cookies saved to {self.cookies_file_path}")

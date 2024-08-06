@@ -87,14 +87,7 @@ class upload_podcast(Driver_class):
         self.save_cookies()
         self.Close_driver()
 
-    # def generate_rss_feed_content(self):
-    #     factory = RequestFactory()
-    #     request = factory.get('/generate-rss-feed/')
-    #     response = GenerateRSSFeed.as_view()(request)
-    #     if response.status_code == 200:
-    #         return response.content
-    #     else:
-    #         raise Exception('Failed to generate RSS feed')
+
     def upload(self):
 
 
