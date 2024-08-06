@@ -24,6 +24,9 @@ migrate: clean-audio clean-db
 	. $(VENV) && python manage.py makemigrations
 	. $(VENV) && python manage.py migrate
 
+login: login
+	. $(VENV) && python manage.py apple_login
+
 # Full clean and migrate process
 clean-migrate: clean-audio clean-db migrate
 
