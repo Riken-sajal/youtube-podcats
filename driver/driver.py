@@ -33,7 +33,7 @@ class Driver_class():
 
     def driver_args(self, Apple_profile):
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--headless")
+        # self.options.add_argument("--headless")
         self.options.add_argument("--no-sandbox")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
@@ -191,6 +191,5 @@ class Driver_class():
         self.driver.execute_script(f"window.scrollTo(0, {px})")
         
     def Close_driver(self):
-        if self.Apple_profile :
-            self.save_cookies()
-        self.driver.close()
+
+        self.driver.quit()

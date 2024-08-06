@@ -5,6 +5,7 @@ import json, time
 from app.models import  TwoFactorCode
 from django.test import RequestFactory
 from app.views import GenerateRSSFeed
+from app.models import AudioFile
 
 
 two_factor_code = None
@@ -84,44 +85,59 @@ class upload_podcast(Driver_class):
 
             return True
         self.save_cookies()
+        self.Close_driver()
 
-    def generate_rss_feed_content(self):
-        factory = RequestFactory()
-        request = factory.get('/generate-rss-feed/')
-        response = GenerateRSSFeed.as_view()(request)
-        if response.status_code == 200:
-            return response.content
-        else:
-            raise Exception('Failed to generate RSS feed')
+    # def generate_rss_feed_content(self):
+    #     factory = RequestFactory()
+    #     request = factory.get('/generate-rss-feed/')
+    #     response = GenerateRSSFeed.as_view()(request)
+    #     if response.status_code == 200:
+    #         return response.content
+    #     else:
+    #         raise Exception('Failed to generate RSS feed')
     def upload(self):
-        rss_feed_content = self.generate_rss_feed_content()
 
-        if not rss_feed_content:
-            print("RSS feed content is empty")
-            return False
 
         self.driver.get('https://podcastsconnect.apple.com/')
-
+        breakpoint()
         Podcast_title = self.find_element('Podcast_title', "//h1[contains(text(), 'Podcasts')]")
         if Podcast_title:
             self.click_element('+ Podcast btn', "//h1/div/button")
             self.click_element('add podcast New show', "//button[contains(text(), 'New Show')]")
 
-            self.click_element("add show with rss", "addFromFeed", By.ID)
+            # self.click_element("add show with rss", "addFromFeed", By.ID)
             self.click_element("add show with rss", "createNew", By.ID)
 
             self.click_element('add podcast New show', "//button[contains(text(), 'Next')]")
 
+            global  SERVER_IP
             if SERVER_IP.endswith('/') :
                 SERVER_IP = SERVER_IP[:-1]
-            self.input_text(f"{SERVER_IP}/podcast/rss-feed/", "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
+
+            if AudioFile.objects.all() :
+                audio_object_latest = AudioFile.objects.all().latest('uploaded_at')
+                self.input_text(f"{audio_object_latest.title}", "RSS feed url Input", '//input[@type="text"]')
+            else :
+                return False
 
             if self.find_element('add btn', "//button[contains(text(), 'Add')]") :
                 self.random_sleep()
                 if self.driver.find_elements(By.XPATH,"//button[contains(text(), 'Add')]"):
                     self.driver.find_elements(By.XPATH, "//button[contains(text(), 'Add')]")[-1].click()
 
+            #     button[contains(text(), 'Add RSS Feed')]
+            self.driver.switch_to.default_content()
+            self.click_element('add podcast New show', '//*[@id="podcast-connect"]/div/div/div[2]/div[2]/div/div[2]/ul/li[1]/button')
 
-        breakpoint()
+
+            self.input_text(f"{SERVER_IP}/podcast/rss-feed/", "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
+            if self.find_element('add podcast New show', "//button[contains(text(), 'Save')]"):
+                self.driver.find_elements(By.XPATH, "//button[contains(text(), 'Save')]")[-1].click()
+
+            if self.find_element('add podcast New show', "//p[contains(text(), 'We’re still processing your show details. Check back later and then click Publish.')]") :
+                return True
+
+
+        self.Close_driver()
 
 

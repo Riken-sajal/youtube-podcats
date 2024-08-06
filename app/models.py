@@ -13,7 +13,8 @@ class AudioFile(models.Model):
     length_in_seconds = models.IntegerField()
     published_at = models.DateTimeField(null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    
+    uploaded_podcast = models.BooleanField(default=False)
+
     def __str__(self):
         self.media_path = os.path.join('media','audio_files',self.title)
         return self.title
