@@ -17,6 +17,5 @@ class Command(BaseCommand):
             with open('rss_feed.xml', 'wb') as f:
                 f.write(rss_feed_content)
 
-            breakpoint()
         else:
             self.stdout.write(self.style.ERROR('Failed to generate RSS feed'))

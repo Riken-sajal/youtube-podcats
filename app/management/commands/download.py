@@ -60,7 +60,6 @@ class Command(BaseCommand):
     def save_video_data(self,metadata):
         """Save downloaded videos details into the object"""
         
-        breakpoint()
         
         if not self.check_video_downloaded():
             new_name = self.video_object.url.split('=')[-1]
