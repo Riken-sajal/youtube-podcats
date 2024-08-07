@@ -13,7 +13,6 @@ def process_video_urls(video_urls, output_dir):
         if video_url in exists_videos_url: continue
 
         try:
-            breakpoint()
             metadata = get_video_metadata(video_url)
 
             download_info = download_youtube_audio(video_url,os.path.join(output_dir,'audio_files') )

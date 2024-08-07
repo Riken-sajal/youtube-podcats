@@ -117,6 +117,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 import os
 
+output_dir = os.path.join(os.getcwd(), 'media')
+os.makedirs(output_dir, exist_ok=True)
+output_dir = os.path.join(output_dir,'audio_files')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = 'static/'

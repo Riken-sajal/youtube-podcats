@@ -3,18 +3,27 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from utils.rss_feed import create_rss_feed
-from app.models import AudioFile, TwoFactorCode
+from app.models import AudioFile, TwoFactorCode, Videos
 from django.utils import timezone
 import os, json
 from driver.bot import Driver_bot
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from utils.tasks import process_video_urls
-
+from podcast.settings import output_dir
 
 @method_decorator(csrf_exempt, name='dispatch')
 class RunScript(View):
     def post(self, request, *args, **kwargs):
+        
+        def create_video_obj(vd_url:str = ""):
+            if not vd_url : return False
+
+            vd_obj = Videos.objects.get_or_create(
+                url = vd_url
+            )
+            return vd_obj
+        
         try:
             data = json.loads(request.body)
             channel_name = data.get('channel_name')
@@ -27,15 +36,17 @@ class RunScript(View):
             if not video_urls:
                 return JsonResponse({'error': 'No videos found for this channel'}, status=404)
 
-            output_dir = os.path.join(os.getcwd(), 'media')
-            os.makedirs(output_dir, exist_ok=True)
+            for video_url in video_urls :
+                create_video_obj(video_url)
 
             # Schedule the background task
-            process_video_urls(video_urls, output_dir)
+            # process_video_urls(video_urls, output_dir)
 
-            return JsonResponse({'message': 'Audio files download started in background'}, status=200)
+            return JsonResponse({'message': 'Audio files will be starting download in background'}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Error : {e}'}, status=400)
 
 class GenerateRSSFeed(View):
     def get(self, request, *args, **kwargs):
