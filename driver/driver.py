@@ -7,11 +7,14 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from utils.extend_exp import expiry_extend
+import undetected_chromedriver as uc
 
 class Driver_class():
 
 
-    def __init__(self,Apple_profile = False):
+    def __init__(self,Apple_profile = False, google_profile=False):
+        self.google_profile = google_profile
+        
         # path for diffrent directories and other files
         self.download_path = os.path.join(os.getcwd(),'downloads')
         self.base_path = os.getcwd()
@@ -33,7 +36,7 @@ class Driver_class():
 
     def driver_args(self, Apple_profile):
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--headless")
+        # self.options.add_argument("--headless")
         self.options.add_argument("--no-sandbox")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
@@ -58,10 +61,12 @@ class Driver_class():
             'download.directory_upgrade': True,
             'safebrowsing.enabled': True
         }
+        
         self.options.add_experimental_option("prefs", prefs)
 
         if Apple_profile :
-
+            
+            
             # defining the profile directory path and if not exists directory then it will create
             profile_directory_path = os.path.join(self.base_path,'Apple_Profile')
             os.makedirs(profile_directory_path,exist_ok=True)
@@ -78,7 +83,17 @@ class Driver_class():
     def get_driver(self,Apple_profile):
         if not self.options in locals() :
             self.driver_args(Apple_profile)
-        self.driver = webdriver.Chrome(options=self.options)
+            
+        if self.google_profile :
+            self.options = uc.ChromeOptions()
+
+            self.options.add_argument(f"download.default_directory=/home/rk/workspace/Sajal/youtube-podcats/media/audio_files")
+            self.options.add_argument(f"--user-data-dir=Google_Profile ")
+            self.options.add_argument(f'--profile-directory=1000')
+            self.options.add_argument('--mute-audio')
+            self.driver = uc.Chrome(use_subprocess=True,options=self.options)
+        else :
+            self.driver = webdriver.Chrome(options=self.options)
 
 
         self.driver.maximize_window()

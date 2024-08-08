@@ -3,8 +3,9 @@ media
 db.sqlite3
 Makefile
 Apple_Profile
+Google_Profile
 env
-
+Google_Profile 
 
 # add migrations file
 **/migrations/**

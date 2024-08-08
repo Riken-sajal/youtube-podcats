@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 import os, random, time
 from app.models import AudioFile, Videos
-import yt_dlp as youtube_dl
-from mutagen.mp3 import MP3
 from podcast.settings import output_dir
+from driver.login_mail import Google
+from mutagen.mp3 import MP3
 
 class Command(BaseCommand):
     help = 'Upload podcast'
@@ -26,43 +26,43 @@ class Command(BaseCommand):
             raise "The video object to be downloaded is NONE"
         
         video_downloaded = self.check_video_downloaded()
+        data = self.get_videos_data()
+        self.video_object.download_done = True
+        self.video_object.save()
+        self.save_video_data(data)
         
-        video_url = video_object.url
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-            'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
-            'ffmpeg_location': '/usr/bin/ffmpeg',
-            'quiet': True,
-            'no_warnings': True,
-        }
+    def get_videos_data(self):
+        Google_class = Google()
+        data = Google_class.videos_data(self.video_object.url)
+        Google_class.download_videos(self.video_object.url)
+        
+        download_dir = '/home/rk/Downloads'
 
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(video_url, download= False if video_downloaded else True)
-            if not video_downloaded :
-                file_path = os.path.join(output_dir, f"{info['title']}.mp3")
-                audio = MP3(file_path)
-            else :
-                file_path = os.path.join(output_dir, f"{self.video_object.url.split('=')[-1]}.mp3")
-            
-            return {
-                'file_path': file_path,
-                'length_in_seconds': info['duration'],
-                'title': info['title'],
-                'description': info.get('description', ''),
-                'category': info.get('categories', ['Unknown'])[0]
-            }
+        for file in os.listdir(download_dir) :
+            if data['title'] in file :
+                file_path = os.path.join(download_dir, file)
+                print(file_path)
+                break
+        else :
+            return
+        new_name = self.video_object.url.split('=')[-1]
+        new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
+        os.rename(file_path, new_video_path)
+        data['file_path'] = new_video_path
+        audio = MP3(new_video_path)
+        data['length_in_seconds'] = audio.info.length
+        return data
+        
+    def move_videos(self):
+        os.listdir("~/Downloads/")
+        pass
 
     def save_video_data(self,metadata):
         """Save downloaded videos details into the object"""
         
         
+        new_name = self.video_object.url.split('=')[-1]
         if not self.check_video_downloaded():
-            new_name = self.video_object.url.split('=')[-1]
             new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
             os.rename(metadata['file_path'], new_video_path)
             time.sleep(random.randint(5,10))

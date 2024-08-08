@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from utils.tasks import process_video_urls
 from podcast.settings import output_dir
+from driver.login_mail import Google
 
 @method_decorator(csrf_exempt, name='dispatch')
 class RunScript(View):
@@ -30,9 +31,10 @@ class RunScript(View):
             if not channel_name:
                 return JsonResponse({'error': 'Channel name is required'}, status=400)
 
-            driver_cls = Driver_bot()
-            video_urls = driver_cls.main(channel_name)
-            driver_cls.Close_driver()
+            Google_cls = Google()
+            video_urls = Google_cls.collect_videos(channel_name)
+            Google_cls.Close_driver()
+            
             if not video_urls:
                 return JsonResponse({'error': 'No videos found for this channel'}, status=404)
 

@@ -73,3 +73,5 @@ class Driver_bot(Driver_class):
             vid_link_li = self.collect_videos_link(channel_name)
             if not vid_link_li : continue
             return vid_link_li
+
+        
