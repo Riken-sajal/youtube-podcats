@@ -30,6 +30,9 @@ login: login
 apple: apple
 	. $(VENV) && python manage.py apple
 
+download: download
+	. $(VENV) && python manage.py download
+
 # Full clean and migrate process
 clean-migrate: clean-audio clean-db migrate
 
