@@ -44,6 +44,8 @@ class Command(BaseCommand):
                 while True :
                     if not ".crdownload" in file_path :
                         break
+                    elif not os.path.exists(file_path):
+                        break
                     else:
                         print("file could not founc")
                         time.sleep(1)
