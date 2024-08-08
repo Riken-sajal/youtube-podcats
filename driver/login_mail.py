@@ -24,8 +24,7 @@ class Google(Driver_class):
         
     def get_youtube(self):
         self.driver.get("https://www.youtube.com/")
-        if self.find_element("Sign in btn",'//a[@aria-label="Sign in"]', timeout=3) :
-            self.login()
+        
         
     def search_channel(self, channel_name):
         self.driver.get(f"https://www.youtube.com/@{channel_name}/videos")
