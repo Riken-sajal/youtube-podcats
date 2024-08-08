@@ -77,6 +77,7 @@ class Command(BaseCommand):
         new_name = self.video_object.url.split('=')[-1]
         if not self.check_video_downloaded():
             new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
+            breakpoint()
             os.rename(metadata['file_path'], new_video_path)
             time.sleep(random.randint(5,10))
         
