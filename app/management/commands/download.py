@@ -29,7 +29,6 @@ class Command(BaseCommand):
         data = self.get_videos_data()
         self.video_object.download_done = True
         self.video_object.save()
-        breakpoint()
         self.save_video_data(data)
         
     def get_videos_data(self):
@@ -42,7 +41,8 @@ class Command(BaseCommand):
         for file in os.listdir(download_dir) :
             if data['title'] in file :
                 file_path = os.path.join(download_dir, file)
-                while True :
+                # while True :
+                for _ in range(10):
                     if not ".crdownload" in file_path :
                         break
                     elif not os.path.exists(file_path):
@@ -54,8 +54,6 @@ class Command(BaseCommand):
                         time.sleep(1)
                 print(file_path)
                 break
-        else :
-            return
         
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
@@ -78,7 +76,6 @@ class Command(BaseCommand):
         new_name = self.video_object.url.split('=')[-1]
         if not self.check_video_downloaded():
             new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
-            breakpoint()
             os.rename(metadata['file_path'], new_video_path)
             time.sleep(random.randint(5,10))
         
