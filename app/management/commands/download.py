@@ -45,6 +45,7 @@ class Command(BaseCommand):
                     if not ".crdownload" in file_path :
                         break
                     elif not os.path.exists(file_path):
+                        print(os.path.exists(file_path))
                         break
                     else:
                         print("file could not founc")
