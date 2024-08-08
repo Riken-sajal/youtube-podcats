@@ -45,8 +45,15 @@ class Command(BaseCommand):
                 break
         else :
             return
+        
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
+        while True :
+            if os.path.exists(file_path) :
+                break
+            else:
+                print("file could not founc")
+                time.sleep(1)
         os.rename(file_path, new_video_path)
         data['file_path'] = new_video_path
         audio = MP3(new_video_path)

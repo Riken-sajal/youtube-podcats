@@ -100,7 +100,6 @@ class Google(Driver_class):
         self.input_text(video_url,"videos input for download",'//input[@id="url"]')
         self.find_element("videos input for download",'//input[@type="submit"]').submit()
         self.click_element("Download btn","/html/body/form/div[2]/a[1]", timeout=30)
-        self.random_sleep(100,150)
 
     def calculate_duration(self,time_frame):
         
