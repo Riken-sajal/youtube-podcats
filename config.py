@@ -1,6 +1,8 @@
 
-APPLE_USERNAME="wande4er777@gmail.com"
-APPLE_PASSWORD="Wanderer@1234"
-SERVER_IP="http://3.34.182.4:8000/"
+# APPLE_USERNAME="wande4er777@gmail.com"
+# APPLE_PASSWORD="Wanderer@1234"
+APPLE_USERNAME="remi@lascauxmedia.group"
+APPLE_PASSWORD="Salut@10!!"
+SERVER_IP="http://15.164.187.251/"
 GOOGLE_EMAIL="pmyjtb7021"
 GOOGLE_PASSWORD="Pmy#2020"
