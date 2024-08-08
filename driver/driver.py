@@ -88,7 +88,7 @@ class Driver_class():
             self.options = uc.ChromeOptions()
             self.options.add_argument("--headless")
 
-            self.options.add_argument(f"download.default_directory=/home/rk/workspace/Sajal/youtube-podcats/media/audio_files")
+            self.options.add_argument(f"download.default_directory=/home/ubuntu/Workspace/youtube-podcats/media/audio_files")
             self.options.add_argument(f"--user-data-dir=Google_Profile ")
             self.options.add_argument(f'--profile-directory=1000')
             self.options.add_argument('--mute-audio')
