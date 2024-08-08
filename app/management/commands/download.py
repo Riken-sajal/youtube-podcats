@@ -29,6 +29,7 @@ class Command(BaseCommand):
         data = self.get_videos_data()
         self.video_object.download_done = True
         self.video_object.save()
+        breakpoint()
         self.save_video_data(data)
         
     def get_videos_data(self):
