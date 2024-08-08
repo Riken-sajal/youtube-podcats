@@ -48,7 +48,8 @@ class Command(BaseCommand):
                         print(os.path.exists(file_path))
                         break
                     else:
-                        print("file could not founc")
+                        print("file could not found")
+                        print(os.listdir(download_dir) )
                         time.sleep(1)
                 print(file_path)
                 break
