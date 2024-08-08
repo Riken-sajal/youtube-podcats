@@ -36,7 +36,7 @@ class Command(BaseCommand):
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
-        download_dir = '/home/rk/Downloads'
+        download_dir = '/home/ubuntu/Downloads'
 
         for file in os.listdir(download_dir) :
             if data['title'] in file :
