@@ -41,6 +41,12 @@ class Command(BaseCommand):
         for file in os.listdir(download_dir) :
             if data['title'] in file :
                 file_path = os.path.join(download_dir, file)
+                while True :
+                    if not ".crdownload" in file_path :
+                        break
+                    else:
+                        print("file could not founc")
+                        time.sleep(1)
                 print(file_path)
                 break
         else :
@@ -48,12 +54,8 @@ class Command(BaseCommand):
         
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
-        while True :
-            if os.path.exists(file_path) :
-                break
-            else:
-                print("file could not founc")
-                time.sleep(1)
+        
+                
         os.rename(file_path, new_video_path)
         data['file_path'] = new_video_path
         audio = MP3(new_video_path)
