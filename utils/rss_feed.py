@@ -18,13 +18,13 @@ def create_rss_feed(audio_files, base_url):
     fg.load_extension('podcast')
 
     # Add iTunes specific tags
-    fg.podcast.itunes_category('Technology', 'Podcasting')
+    fg.podcast.itunes_category('Entrepreneurship', 'Careers')
     fg.podcast.itunes_explicit('no')
-    fg.podcast.itunes_author('Your Name')
+    fg.podcast.itunes_author('Hormozi')
     fg.podcast.itunes_image(base_url + '/media/cover_imgs/csvvc.jpg')
-    fg.podcast.itunes_summary('A summary of your podcast.')
-    fg.podcast.itunes_subtitle('Your podcast subtitle')
-    fg.podcast.itunes_owner(name='Riken', email='Riken@sajaltech.com')
+    fg.podcast.itunes_summary('Hormozi Non-Official')
+    fg.podcast.itunes_subtitle('Hormozi Non-Official')
+    fg.podcast.itunes_owner(name='Hormozi', email='remi@lascauxmedia.group')
     fg.podcast.itunes_new_feed_url(base_url + '/podcast/rss-feed/')
 
     for audio_file in audio_files:
