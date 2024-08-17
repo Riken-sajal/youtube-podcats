@@ -135,15 +135,29 @@ class upload_podcast(Driver_class):
 
         self.Close_driver()
 
+
     def publish(self):
-        current_link = self.driver.current_url
-        for i in self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a"):
+        def press_back():
+            self.driver.back() if "show" in self.driver.current_url  else None
+            pass
+        
+        show_idx = 0
+        while True :
             
-            if self.find_element(By.XPATH,"//*[contains(text(), 'Publish')]") :
+                i = self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")[show_idx]
+                i.click()
+                self.random_sleep()
+                if self.find_element(By.XPATH,"//*[contains(text(), 'Publish')]") :
+                    
+                    self.random_sleep(10,15)
+                    self.click_element('copy rights third party','CLAIM_NO_THIRD_PARTY_CONTENT',By.ID)
+                    self.click_element('copy rights third party','//option[@value="RELEASE_OPTOUT"]',By.XPATH)
+                    self.click_element(By.XPATH,"//*[contains(text(), 'Save')]") 
+                    self.click_element(By.XPATH,"//*[contains(text(), 'Publish')]") 
                 
-                self.random_sleep(10,15)
-                self.click_element('copy rights third party','CLAIM_NO_THIRD_PARTY_CONTENT',By.ID)
-                self.click_element('copy rights third party','//option[@value="RELEASE_OPTOUT"]',By.XPATH)
-                self.click_element(By.XPATH,"//*[contains(text(), 'Save')]") 
-                self.click_element(By.XPATH,"//*[contains(text(), 'Publish')]") 
-            self.driver.back() if not self.driver.current_url  == current_link else None
+                
+                press_back()   
+                if len(self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")) < show_idx :
+                    break     
+                show_idx += 1
+            

@@ -50,6 +50,8 @@ def create_rss_feed(audio_files, base_url):
         fe.podcast.itunes_duration(duration_str)
         fe.pubDate(audio_file.uploaded_at.strftime("%a, %d %b %Y %H:%M:%S %z"))
         fe.podcast.itunes_image(base_url + '/media/cover_imgs/csvvc.jpg')
+        audio_file.uploaded_podcast = True
+        audio_file.save()
 
     rss_feed_content = fg.rss_str(pretty=True)
     return rss_feed_content

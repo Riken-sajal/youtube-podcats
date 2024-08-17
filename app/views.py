@@ -51,8 +51,11 @@ class RunScript(View):
             return JsonResponse({'error': f'Error : {e}'}, status=400)
 
 class GenerateRSSFeed(View):
-    def get(self, request, *args, **kwargs):
-        audio_files = AudioFile.objects.all()
+    def get(self, request,identifier, *args, **kwargs):
+        audio_files = AudioFile.objects.filter(uploaded_podcast = False,)
+        if not audio_files :
+            return JsonResponse({'error': f'Error : All podcast has been uploaded'}, status=400)
+        
         base_url = request.build_absolute_uri('/')[:-1]
         rss_feed_content = create_rss_feed(audio_files, base_url)
         return HttpResponse(rss_feed_content, content_type='application/rss+xml')

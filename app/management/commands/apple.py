@@ -16,7 +16,6 @@ class Command(BaseCommand):
         while True:
             
             current_time = datetime.datetime.now()
-            breakpoint()
             if (current_time - last_login_time).total_seconds() >= 5 * 60:
                 podcast_class.login_apple()
                 last_login_time = current_time
