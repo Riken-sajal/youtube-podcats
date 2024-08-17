@@ -128,15 +128,17 @@ class upload_podcast(Driver_class):
 
             if self.find_element('add podcast New show', "//p[contains(text(), 'We’re still processing your show details. Check back later and then click Publish.')]") :
                 self.random_sleep(10,15)
+                
+                self.driver.back()
                 return True
 
 
         self.Close_driver()
 
     def publish(self):
+        current_link = self.driver.current_url
         for i in self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a"):
             
-            self.driver.back()
             if self.find_element(By.XPATH,"//*[contains(text(), 'Publish')]") :
                 
                 self.random_sleep(10,15)
@@ -144,4 +146,4 @@ class upload_podcast(Driver_class):
                 self.click_element('copy rights third party','//option[@value="RELEASE_OPTOUT"]',By.XPATH)
                 self.click_element(By.XPATH,"//*[contains(text(), 'Save')]") 
                 self.click_element(By.XPATH,"//*[contains(text(), 'Publish')]") 
-            self.driver.back()
+            self.driver.back() if not self.driver.current_url  == current_link else None
