@@ -148,11 +148,14 @@ class upload_podcast(Driver_class):
     def publish(self):
         def press_back():
             self.driver.back() if "show" in self.driver.current_url  else None
+            print('pressed back')
             pass
         
         show_idx = 0
         while True :
-                self.random_sleep()
+            
+            self.random_sleep()
+            try :
                 i = self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")[show_idx]
                 i.click()
                 self.random_sleep()
@@ -163,12 +166,12 @@ class upload_podcast(Driver_class):
                     self.click_element('copy rights third party','//option[@value="RELEASE_OPTOUT"]',By.XPATH)
                     self.click_element(By.XPATH,"//*[contains(text(), 'Save')]") 
                     self.click_element(By.XPATH,"//*[contains(text(), 'Publish')]") 
+            except : ...    
                 
-                
-                press_back()   
-                if len(self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")) < show_idx :
-                    break     
-                show_idx += 1
+            press_back()   
+            if len(self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")) < show_idx :
+                break     
+            show_idx += 1
             
     def delete_drafts(self):
         def press_back():
