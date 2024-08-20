@@ -7,8 +7,8 @@ from fuzzywuzzy import process
 two_factor_code = None
 
 class Google(Driver_class):
-    def __init__(self):
-        super().__init__(google_profile=True)
+    def __init__(self,google_profile=True):
+        super().__init__(google_profile=google_profile)
         
     def login(self):
         login_url = 'https://www.google.com/intl/en-GB/gmail/about'

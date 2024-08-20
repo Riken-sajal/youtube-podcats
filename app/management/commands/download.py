@@ -74,7 +74,7 @@ class Command(BaseCommand):
             else:
                 return None, score
             
-        Google_class = Google()
+        Google_class = Google(google_profile=False)
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
