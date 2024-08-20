@@ -2,7 +2,7 @@ from driver.driver import Driver_class
 from selenium.webdriver.common.by import By
 from config import GOOGLE_EMAIL, GOOGLE_PASSWORD
 import subprocess, os, time
-
+from fuzzywuzzy import process
 
 two_factor_code = None
 
@@ -108,6 +108,24 @@ class Google(Driver_class):
 
                
     def download_videos(self,video_url):
+        import difflib
+
+        def string_similarity(file_name, title):
+            # Calculate the similarity between the file name and the title
+            return process.extractOne(title, [file_name])[1]
+
+        def find_closest_match(title, directory):
+            # List all files in the directory
+            files = os.listdir(directory)
+            
+            # Get the best match based on fuzzy matching
+            matched_file, score = process.extractOne(title, files)
+            
+            if score > 75:  # You can adjust this threshold
+                return matched_file, score
+            else:
+                return None, score
+        
         def get_local_username():
             try:
                 # Run the `whoami` command using subprocess to get the current username
@@ -132,26 +150,52 @@ class Google(Driver_class):
         self.input_text(video_url,"videos input for download",'//input[@id="url"]')
         self.find_element("videos input for download",'//input[@type="submit"]').submit()
         self.click_element("Download btn","/html/body/form/div[2]/a[1]", timeout=30)
-        # self.random_sleep(200,300)
         
         download_dir = f'/home/{get_local_username()}/Downloads'
-        breakpoint()
-        for file in os.listdir(download_dir) :
-            if data['title'] in file :
-                file_path = os.path.join(download_dir, file)
-                # while True :
-                while True:
-                    if not ".crdownload" in file_path :
-                        break
-                    elif not os.path.exists(file_path):
-                        print(os.path.exists(file_path))
-                        break
-                    else:
-                        print("file could not found")
-                        print(os.listdir(download_dir) )
-                        time.sleep(3)
-                print(file_path)
-                break
+        self.random_sleep(15,20)
+        matched_file, similarity_score = find_closest_match(data['title'], download_dir)
+
+        if matched_file:
+            file_path = os.path.join(download_dir, matched_file)
+            
+            while True:
+                # Refresh the list of files in the directory to check the current state
+                current_files = os.listdir(download_dir)
+                
+                # Check if the matching file (excluding .crdownload) is present in the directory
+                if matched_file in current_files and ".crdownload" not in matched_file:
+                    print(f"Found and matched file: {file_path}")
+                    break
+                
+                # Check for the .crdownload version of the matched file
+                crdownload_file = matched_file + ".crdownload"
+                if crdownload_file in current_files:
+                    print("File is still downloading, waiting for completion...")
+                else:
+                    print("File not found or download might have failed.")
+                
+                time.sleep(3)  # Wait for 3 seconds before checking again
+        else:
+            print("No close match found.")
+
+        # for file in os.listdir(download_dir) :
+        #     if data['title'] in file :
+        #         file_path = os.path.join(download_dir, file)
+        #         # while True :
+        #         while True:
+        #             if not ".crdownload" in file_path :
+        #                 if string_similarity() > 75 :
+                            
+        #                 break
+        #             elif not os.path.exists(file_path):
+        #                 print(os.path.exists(file_path))
+        #                 break
+        #             else:
+        #                 print("file could not found")
+        #                 print(os.listdir(download_dir) )
+        #                 time.sleep(3)
+        #         print(file_path)
+        #         break
         
         
     def calculate_duration(self,time_frame):

@@ -5,6 +5,17 @@ from podcast.settings import output_dir
 from driver.login_mail import Google
 from mutagen.mp3 import MP3
 import subprocess
+import difflib
+
+def string_similarity(str1, str2):
+    # Create a SequenceMatcher object
+    seq = difflib.SequenceMatcher(None, str1, str2)
+    
+    # Get the similarity ratio
+    similarity = seq.ratio()
+    
+    # Convert the ratio to a percentage
+    return similarity * 100
 
 def get_local_username():
     try:
@@ -49,28 +60,50 @@ class Command(BaseCommand):
             self.save_video_data(data)
         
     def get_videos_data(self):
+        from fuzzywuzzy import process
+        
+        def find_closest_match(title, directory):
+            # List all files in the directory
+            files = os.listdir(directory)
+            
+            # Get the best match based on fuzzy matching
+            matched_file, score = process.extractOne(title, files)
+            
+            if score > 75:  # You can adjust this threshold
+                return matched_file, score
+            else:
+                return None, score
+            
         Google_class = Google()
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
         download_dir = f'/home/{get_local_username()}/Downloads'
-    
-        for file in os.listdir(download_dir) :
-            if data['title'] in file :
-                file_path = os.path.join(download_dir, file)
-                # while True :
-                for _ in range(10):
-                    if not ".crdownload" in file_path :
-                        break
-                    elif not os.path.exists(file_path):
-                        print(os.path.exists(file_path))
-                        break
-                    else:
-                        print("file could not found")
-                        print(os.listdir(download_dir) )
-                        time.sleep(3)
-                print(file_path)
-                break
+        self.random_sleep(15,20)
+        matched_file, similarity_score = find_closest_match(data['title'], download_dir)
+
+        if matched_file:
+            file_path = os.path.join(download_dir, matched_file)
+            
+            while True:
+                # Refresh the list of files in the directory to check the current state
+                current_files = os.listdir(download_dir)
+                
+                # Check if the matching file (excluding .crdownload) is present in the directory
+                if matched_file in current_files and ".crdownload" not in matched_file:
+                    print(f"Found and matched file: {file_path}")
+                    break
+                
+                # Check for the .crdownload version of the matched file
+                crdownload_file = matched_file + ".crdownload"
+                if crdownload_file in current_files:
+                    print("File is still downloading, waiting for completion...")
+                else:
+                    print("File not found or download might have failed.")
+                
+                time.sleep(3)  # Wait for 3 seconds before checking again
+        else:
+            print("No close match found.")
         
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
