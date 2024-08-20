@@ -1,6 +1,7 @@
 from driver.driver import Driver_class
 from selenium.webdriver.common.by import By
 from config import GOOGLE_EMAIL, GOOGLE_PASSWORD
+import subprocess, os, time
 
 
 two_factor_code = None
@@ -107,13 +108,50 @@ class Google(Driver_class):
 
                
     def download_videos(self,video_url):
+        def get_local_username():
+            try:
+                # Run the `whoami` command using subprocess to get the current username
+                result = subprocess.run(['whoami'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                
+                # Check if the command was successful
+                if result.returncode == 0:
+                    # Return the username, stripping any trailing whitespace or newline
+                    return result.stdout.strip()
+                else:
+                    # If the command failed, return the error message
+                    return f"Error: {result.stderr.strip()}"
+            
+            except Exception as e:
+                # Handle any exceptions that may occur and return the exception message
+                return f"Exception occurred: {str(e)}"
+            
+            
         data = self.videos_data(video_url)
         self.driver.get("https://ytmp3s.nu/3vpx/")
         # https://www.youtube.com/watch?v=WXBnj1yRb5A
         self.input_text(video_url,"videos input for download",'//input[@id="url"]')
         self.find_element("videos input for download",'//input[@type="submit"]').submit()
         self.click_element("Download btn","/html/body/form/div[2]/a[1]", timeout=30)
-        self.random_sleep(200,300)
+        # self.random_sleep(200,300)
+        
+        download_dir = f'/home/{get_local_username()}/Downloads'
+
+        for file in os.listdir(download_dir) :
+            if data['title'] in file :
+                file_path = os.path.join(download_dir, file)
+                # while True :
+                while True:
+                    if not ".crdownload" in file_path :
+                        break
+                    elif not os.path.exists(file_path):
+                        print(os.path.exists(file_path))
+                        break
+                    else:
+                        print("file could not found")
+                        print(os.listdir(download_dir) )
+                        time.sleep(3)
+                print(file_path)
+                break
         
         
     def calculate_duration(self,time_frame):
