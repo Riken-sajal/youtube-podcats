@@ -21,7 +21,8 @@ class RunScript(View):
             if not vd_url : return False
 
             vd_obj = Videos.objects.get_or_create(
-                url = vd_url
+                url = vd_url,
+                download_done = False
             )
             return vd_obj
         
@@ -52,7 +53,7 @@ class RunScript(View):
 
 class GenerateRSSFeed(View):
     def get(self, request,identifier, *args, **kwargs):
-        audio_files = AudioFile.objects.filter(uploaded_podcast = False,)
+        audio_files = AudioFile.objects.filter(uploaded_podcast = False)
         if not audio_files :
             return JsonResponse({'error': f'Error : All podcast has been uploaded'}, status=400)
         

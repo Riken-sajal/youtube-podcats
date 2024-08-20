@@ -6,7 +6,7 @@ Apple_Profile
 Google_Profile
 env
 Google_Profile 
-
+cookies.json
 # add migrations file
 **/migrations/**
 !**/migrations

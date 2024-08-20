@@ -89,7 +89,13 @@ class upload_podcast(Driver_class):
 
 
     def upload(self):
-
+        
+        audio_files = AudioFile.objects.filter(uploaded_podcast = False)
+        if not audio_files :
+            return False
+        
+        # audio_files = audio_files.first().rss_url
+        audio_files = audio_files.first().rss_url
 
         self.driver.get('https://podcastsconnect.apple.com/')
         Podcast_title = self.find_element('Podcast_title', "//h1[contains(text(), 'Podcasts')]")
@@ -107,7 +113,10 @@ class upload_podcast(Driver_class):
                 SERVER_IP = SERVER_IP[:-1]
 
             if AudioFile.objects.all() :
-                audio_object_latest = AudioFile.objects.all().latest('uploaded_at')
+                # audio_object_latest = AudioFile.objects.all().latest('uploaded_at')
+                audio_object_latest = AudioFile.objects.filter(uploaded_podcast = False).first()
+                audio_files_rss = audio_files.first().rss_url
+                
                 self.input_text(f"{audio_object_latest.title}", "RSS feed url Input", '//input[@type="text"]')
             else :
                 return False
@@ -122,7 +131,7 @@ class upload_podcast(Driver_class):
             self.click_element('add podcast New show', '//*[@id="podcast-connect"]/div/div/div[2]/div[2]/div/div[2]/ul/li[1]/button')
 
 
-            self.input_text(f"{SERVER_IP}/podcast/rss-feed/", "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
+            self.input_text(f"{SERVER_IP}/podcast/rss-feed/{audio_files_rss}/", "RSS feed url Input", '//textarea[@placeholder="https://podcast.example.com/feed.rss"]')
             if self.find_element('add podcast New show', "//button[contains(text(), 'Save')]"):
                 self.driver.find_elements(By.XPATH, "//button[contains(text(), 'Save')]")[-1].click()
 
@@ -130,6 +139,8 @@ class upload_podcast(Driver_class):
                 self.random_sleep(10,15)
                 
                 self.driver.back()
+                audio_object_latest.uploaded_podcast = True
+                audio_object_latest.save()
                 return True
 
 
@@ -143,7 +154,7 @@ class upload_podcast(Driver_class):
         
         show_idx = 0
         while True :
-            
+                self.random_sleep()
                 i = self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")[show_idx]
                 i.click()
                 self.random_sleep()
@@ -161,3 +172,29 @@ class upload_podcast(Driver_class):
                     break     
                 show_idx += 1
             
+    def delete_drafts(self):
+        def press_back():
+            self.driver.back() if "show" in self.driver.current_url  else None
+            pass
+        
+        self.driver.get('https://podcastsconnect.apple.com/')
+        
+        show_idx = 0
+        while True :
+                self.random_sleep(10,15)
+            
+                i = self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")[show_idx]
+                i.click()
+                self.random_sleep()
+                
+                if self.find_element(By.XPATH,"//*[contains(text(), 'Archive Show')]") :
+                    self.click_element(By.XPATH,"//*[contains(text(), 'Archive Show')]") 
+                    self.click_element('archive show','/html/body/div[6]/div/div[2]/div[1]/div/div/input',By.XPATH)
+                    self.click_element("archive btn","/html/body/div[6]/div/div[2]/div[2]/div/button[2]") 
+                    self.random_sleep()
+                
+                press_back()   
+                if len(self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")) < show_idx :
+                    break     
+                show_idx += 1
+        pass

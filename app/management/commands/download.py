@@ -4,13 +4,30 @@ from app.models import AudioFile, Videos
 from podcast.settings import output_dir
 from driver.login_mail import Google
 from mutagen.mp3 import MP3
+import subprocess
 
+def get_local_username():
+    try:
+        # Run the `whoami` command using subprocess to get the current username
+        result = subprocess.run(['whoami'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        
+        # Check if the command was successful
+        if result.returncode == 0:
+            # Return the username, stripping any trailing whitespace or newline
+            return result.stdout.strip()
+        else:
+            # If the command failed, return the error message
+            return f"Error: {result.stderr.strip()}"
+    
+    except Exception as e:
+        # Handle any exceptions that may occur and return the exception message
+        return f"Exception occurred: {str(e)}"
+    
 class Command(BaseCommand):
     help = 'Upload podcast'
 
     def handle(self, *args, **kwargs):
         self.exists_videos_url = AudioFile.objects.values_list('youtube_url', flat=True) 
-        
         metadata = self.download_video(self.get_video_link())
         if metadata :
             self.video_object.download_done = True
@@ -25,18 +42,18 @@ class Command(BaseCommand):
         if not video_object :
             raise "The video object to be downloaded is NONE"
         
-        video_downloaded = self.check_video_downloaded()
-        data = self.get_videos_data()
-        self.video_object.download_done = True
-        self.video_object.save()
-        self.save_video_data(data)
+        if not  self.check_video_downloaded():
+            data = self.get_videos_data()
+            self.video_object.download_done = True
+            self.video_object.save()
+            self.save_video_data(data)
         
     def get_videos_data(self):
         Google_class = Google()
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
-        download_dir = '/home/ubuntu/Downloads'
+        download_dir = f'/home/{get_local_username()}/Downloads'
 
         for file in os.listdir(download_dir) :
             if data['title'] in file :
@@ -51,7 +68,7 @@ class Command(BaseCommand):
                     else:
                         print("file could not found")
                         print(os.listdir(download_dir) )
-                        time.sleep(1)
+                        time.sleep(3)
                 print(file_path)
                 break
         

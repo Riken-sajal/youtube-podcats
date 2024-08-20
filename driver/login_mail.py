@@ -72,6 +72,18 @@ class Google(Driver_class):
                 break
         
     def collect_videos(self, channel_name : str = ""):
+        
+        def modify_string(text):
+            """keep only video url and their id"""
+            parts = text.split('=')
+            
+            if len(parts) >= 3:
+                first_part = parts[0] 
+                second_part = parts[1].split()[0] 
+                result = f"{first_part}={second_part}"
+                return result
+            return text 
+        
         videos_link = []
         
         self.get_youtube()
@@ -86,7 +98,7 @@ class Google(Driver_class):
                     for video in grid.find_elements(By.XPATH, './/*[@id="content"]/*'):
                         video_link = video.find_element(By.XPATH, './/a[@id="video-title-link"]').get_attribute('href')
                         if not video_link in videos_link:
-                            videos_link.append(video_link)
+                            videos_link.append(modify_string(video_link))
 
                 return videos_link
             except : ...
