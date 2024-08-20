@@ -94,8 +94,6 @@ class upload_podcast(Driver_class):
         if not audio_files :
             return False
         
-        # audio_files = audio_files.first().rss_url
-        audio_files = audio_files.first().rss_url
 
         self.driver.get('https://podcastsconnect.apple.com/')
         Podcast_title = self.find_element('Podcast_title', "//h1[contains(text(), 'Podcasts')]")
