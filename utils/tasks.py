@@ -7,6 +7,14 @@ from app.models import AudioFile
 import os
 
 def process_video_urls(video_urls, output_dir):
+    def youtube_id(youtube_url):
+        # Extracts the video ID from the youtube_url
+        if 'youtu.be' in youtube_url:
+            return youtube_url.split('/')[-1]
+        elif 'youtube.com' in youtube_url:
+            return youtube_url.split('v=')[-1].split('&')[0]
+        return None
+    
     exists_videos_url = AudioFile.objects.values_list('youtube_url', flat=True)
 
     for video_url in video_urls:
@@ -38,8 +46,8 @@ def process_video_urls(video_urls, output_dir):
                 length_in_seconds=length_in_seconds,
                 cover_image=cover_image_path,
                 youtube_url=video_url,
-                media_path=new_video_path
-                
+                media_path=new_video_path,
+                rss_url = youtube_id(video_url)
             )
         except Exception as e:
             # Log the error

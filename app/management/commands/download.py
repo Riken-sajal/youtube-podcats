@@ -89,6 +89,13 @@ class Command(BaseCommand):
     def save_video_data(self,metadata):
         """Save downloaded videos details into the object"""
         
+        def youtube_id(youtube_url):
+            # Extracts the video ID from the youtube_url
+            if 'youtu.be' in youtube_url:
+                return youtube_url.split('/')[-1]
+            elif 'youtube.com' in youtube_url:
+                return youtube_url.split('v=')[-1].split('&')[0]
+            return None
         
         new_name = self.video_object.url.split('=')[-1]
         if not self.check_video_downloaded():
@@ -108,7 +115,8 @@ class Command(BaseCommand):
             cover_image=cover_image_path,
             youtube_url=self.video_object.url,
             media_path=new_video_path,
-            video = self.video_object
+            video = self.video_object,
+            rss_url = youtube_id(self.video_object.url)
         )
         
         return Audio_obj

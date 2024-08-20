@@ -53,7 +53,8 @@ class RunScript(View):
 
 class GenerateRSSFeed(View):
     def get(self, request,identifier, *args, **kwargs):
-        audio_files = AudioFile.objects.filter(uploaded_podcast = False)
+        audio_files = AudioFile.objects.filter(rss_url = identifier)
+        breakpoint()
         if not audio_files :
             return JsonResponse({'error': f'Error : All podcast has been uploaded'}, status=400)
         
