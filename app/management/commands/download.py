@@ -79,7 +79,6 @@ class Command(BaseCommand):
         Google_class.download_videos(self.video_object.url)
         
         download_dir = f'/home/{get_local_username()}/Downloads'
-        self.random_sleep(15,20)
         matched_file, similarity_score = find_closest_match(data['title'], download_dir)
 
         if matched_file:
