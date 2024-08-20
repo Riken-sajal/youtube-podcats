@@ -122,7 +122,7 @@ os.makedirs(output_dir, exist_ok=True)
 output_dir = os.path.join(output_dir,'audio_files')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
