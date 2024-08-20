@@ -41,9 +41,9 @@ class Command(BaseCommand):
         self.exists_videos_url = AudioFile.objects.values_list('youtube_url', flat=True) 
         metadata = self.download_video(self.get_video_link())
         if metadata :
+            self.save_video_data(metadata)
             self.video_object.download_done = True
             self.video_object.save()
-            self.save_video_data(metadata)
         
     def get_video_link(self):
         self.video_object = Videos.objects.filter(download_done=False).order_by('created_at').first()
@@ -164,6 +164,8 @@ class Command(BaseCommand):
         to allow the download process
         """
         if  os.path.exists(os.path.join(output_dir, f"{self.video_object.url.split('=')[-1]}.mp3")):
+            self.video_object.download_done = True
+            self.video_object.save()
             return True
         else :
             return False
