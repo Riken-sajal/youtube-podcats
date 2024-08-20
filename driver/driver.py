@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from utils.extend_exp import expiry_extend
 import undetected_chromedriver as uc
+from config import HEADLESS
 
 class Driver_class():
 
@@ -36,7 +37,7 @@ class Driver_class():
 
     def driver_args(self, Apple_profile):
         self.options = webdriver.ChromeOptions()
-        # self.options.add_argument("--headless")
+        self.options.add_argument("--headless") if HEADLESS else None
         self.options.add_argument("--no-sandbox")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
@@ -86,8 +87,8 @@ class Driver_class():
             
         if self.google_profile :
             self.options = uc.ChromeOptions()
-            # self.options.add_argument("--headless")
-
+            self.options.add_argument("--headless") if HEADLESS else None
+# 
             self.options.add_argument(f"download.default_directory=/home/ubuntu/Workspace/youtube-podcats/media/audio_files")
             self.options.add_argument(f"--user-data-dir=Google_Profile ")
             self.options.add_argument(f'--profile-directory=1000')

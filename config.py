@@ -3,6 +3,7 @@
 # APPLE_PASSWORD="Wanderer@1234"
 APPLE_USERNAME="remi@lascauxmedia.group"
 APPLE_PASSWORD="Salut@10!!"
+HEADLESS=False
 SERVER_IP="http://15.164.187.251/"
 GOOGLE_EMAIL="pmyjtb7021"
 GOOGLE_PASSWORD="Pmy#2020"
