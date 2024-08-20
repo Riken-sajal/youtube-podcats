@@ -26,7 +26,6 @@ class upload_podcast(Driver_class):
             self.load_cookies()
             self.driver.refresh()
 
-        breakpoint()
         sign_in_btn = self.find_element('Sign in Btn', "//button[contains(text(), 'Sign In')]", By.XPATH)
         if not sign_in_btn:
             self.save_cookies()

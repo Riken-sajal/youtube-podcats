@@ -54,9 +54,8 @@ class RunScript(View):
 class GenerateRSSFeed(View):
     def get(self, request,identifier, *args, **kwargs):
         audio_files = AudioFile.objects.filter(rss_url = identifier)
-        breakpoint()
         if not audio_files :
-            return JsonResponse({'error': f'Error : All podcast has been uploaded'}, status=400)
+            return JsonResponse({'error': f'Error : No episode has been found'}, status=400)
         
         base_url = request.build_absolute_uri('/')[:-1]
         rss_feed_content = create_rss_feed(audio_files, base_url)
