@@ -19,10 +19,10 @@ def get_local_username():
         # Handle any exceptions that may occur and return the exception message
         return f"Exception occurred: {str(e)}"
     
-APPLE_USERNAME="wande4er777@gmail.com"
-APPLE_PASSWORD="Wanderer@1234"
-# APPLE_USERNAME="remi@lascauxmedia.group"
-# APPLE_PASSWORD="Salut@10!!"
+# APPLE_USERNAME="wande4er777@gmail.com"
+# APPLE_PASSWORD="Wanderer@1234"
+APPLE_USERNAME="remi@lascauxmedia.group"
+APPLE_PASSWORD="Salut@10!!"
 # if get_local_username()
 LOCAL_USERNAME = get_local_username()
 if LOCAL_USERNAME == "rk" :
