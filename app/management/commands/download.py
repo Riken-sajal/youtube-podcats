@@ -65,16 +65,17 @@ class Command(BaseCommand):
         from fuzzywuzzy import process
         
         def find_closest_match(title, directory):
-            # List all files in the directory
-            files = os.listdir(directory)
-            
-            # Get the best match based on fuzzy matching
-            matched_file, score = process.extractOne(title, files)
-            
-            if score > 75:  # You can adjust this threshold
-                return matched_file, score
-            else:
-                return None, score
+            while True :
+                    # List all files in the directory
+                    files = os.listdir(directory)
+                    
+                    # Get the best match based on fuzzy matching
+                    matched_file, score = process.extractOne(title, files)
+                    
+                    if score > 75:  # You can adjust this threshold
+                        return matched_file, score
+                    
+                    time.sleep(2)
             
         Google_class = Google(google_profile=False)
         data = Google_class.videos_data(self.video_object.url)
