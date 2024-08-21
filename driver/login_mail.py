@@ -153,32 +153,27 @@ class Google(Driver_class):
         
         download_dir = f'/home/{get_local_username()}/Downloads'
         # self.random_sleep(15,20)
-        matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-
-        if matched_file:
+            
+        while True:
+            matched_file, similarity_score = find_closest_match(data['title'], download_dir)
             file_path = os.path.join(download_dir, matched_file)
             
-            while True:
-                matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-                
-                # Refresh the list of files in the directory to check the current state
-                current_files = os.listdir(download_dir)
-                
-                # Check if the matching file (excluding .crdownload) is present in the directory
-                if matched_file in current_files and ".crdownload" not in matched_file:
-                    print(f"Found and matched file: {file_path}")
-                    break
-                
-                # Check for the .crdownload version of the matched file
-                crdownload_file = matched_file + ".crdownload"
-                if crdownload_file in current_files:
-                    print("File is still downloading, waiting for completion...")
-                else:
-                    print("File not found or download might have failed.")
-                
-                time.sleep(3)  # Wait for 3 seconds before checking again
-        else:
-            print("No close match found.")
+            # Refresh the list of files in the directory to check the current state
+            current_files = os.listdir(download_dir)
+            
+            # Check if the matching file (excluding .crdownload) is present in the directory
+            if matched_file in current_files and ".crdownload" not in matched_file:
+                print(f"Found and matched file: {file_path}")
+                break
+            
+            # Check for the .crdownload version of the matched file
+            crdownload_file = matched_file + ".crdownload"
+            if crdownload_file in current_files:
+                print("File is still downloading, waiting for completion...")
+            else:
+                print("File not found or download might have failed.")
+            
+            time.sleep(3)  # Wait for 3 seconds before checking again
 
         # for file in os.listdir(download_dir) :
         #     if data['title'] in file :
