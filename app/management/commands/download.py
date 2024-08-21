@@ -82,7 +82,6 @@ class Command(BaseCommand):
         
         download_dir = f'/home/{LOCAL_USERNAME}/Downloads'
         matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-        breakpoint()
         if matched_file:
             
             file_path = os.path.join(download_dir, matched_file)

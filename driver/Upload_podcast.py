@@ -153,7 +153,6 @@ class upload_podcast(Driver_class):
         
         show_idx = 0
         while True :
-            breakpoint()
             self.random_sleep()
             try :
                 i = self.driver.find_elements(By.XPATH,"//*[contains(@class,'show')]/div/a")[show_idx]
