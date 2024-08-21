@@ -6,6 +6,7 @@ from driver.login_mail import Google
 from mutagen.mp3 import MP3
 import subprocess
 import difflib
+from config import LOCAL_USERNAME
 
 def string_similarity(str1, str2):
     # Create a SequenceMatcher object
@@ -17,7 +18,7 @@ def string_similarity(str1, str2):
     # Convert the ratio to a percentage
     return similarity * 100
 
-def get_local_username():
+
     try:
         # Run the `whoami` command using subprocess to get the current username
         result = subprocess.run(['whoami'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -78,10 +79,11 @@ class Command(BaseCommand):
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
-        download_dir = f'/home/{get_local_username()}/Downloads'
+        download_dir = f'/home/{LOCAL_USERNAME}/Downloads'
         matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-
+        breakpoint()
         if matched_file:
+            
             file_path = os.path.join(download_dir, matched_file)
             
             while True:

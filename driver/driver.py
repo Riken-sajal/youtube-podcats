@@ -8,7 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from utils.extend_exp import expiry_extend
 import undetected_chromedriver as uc
-from config import HEADLESS
+from config import HEADLESS, LOCAL_USERNAME, DOWNLOAD_DIR
+
 
 class Driver_class():
 
@@ -52,15 +53,18 @@ class Driver_class():
         self.options.add_argument("--ignore-certificate-errors")
         self.options.add_argument("--enable-javascript")
         self.options.add_argument("--enable-popup-blocking")
+        self.options.add_argument('--ignore-ssl-errors=yes')
+        self.options.add_argument('--ignore-certificate-errors')
         self.options.add_argument(
             f"user-agent=Mozilla/5.0 (Windows NT {random.randint(6, 10)}.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.{random.randint(3000, 4000)}.87 Safari/537.36")
         prefs = {
-            "download.prompt_for_download": True,  # Always ask for download location
-            "download.default_directory": "",  # Disable default directory for downloads
+            "download.default_directory": DOWNLOAD_DIR,  # Disable default directory for downloads
             "download_restrictions": 3,  # Block all downloads,
             'profile.default_content_setting_values.automatic_downloads': 1,
             'download.directory_upgrade': True,
-            'safebrowsing.enabled': True
+            # 'safebrowsing.enabled': True,
+            "download.prompt_for_download": False,  # Do not prompt for download
+            # "safebrowsing.enabled": True  # Enable safe browsing
         }
         
         self.options.add_experimental_option("prefs", prefs)
@@ -76,8 +80,8 @@ class Driver_class():
             self.options.add_argument(
                 f"--user-data-dir={profile_directory_path}")
             self.options.add_argument(r'--profile-directory=Profile 1')
-        else :
-            self.options.add_argument("--incognito")
+        # else :
+        #     self.options.add_argument("--incognito")
 
         return  self.options
 
@@ -89,7 +93,7 @@ class Driver_class():
             self.options = uc.ChromeOptions()
             self.options.add_argument("--headless") if HEADLESS else None
 # 
-            self.options.add_argument(f"download.default_directory=/home/ubuntu/Workspace/youtube-podcats/media/audio_files")
+            self.options.add_argument(f"download.default_directory={DOWNLOAD_DIR}")
             self.options.add_argument(f"--user-data-dir=Google_Profile ")
             self.options.add_argument(f'--profile-directory=1000')
             self.options.add_argument('--mute-audio')
