@@ -81,7 +81,7 @@ class Command(BaseCommand):
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
-        download_dir = f'/home/{get_local_username()}/Downloads'
+        download_dir = f'/home/{LOCAL_USERNAME}/Downloads'
         # self.random_sleep(15,20)
             
         while True:

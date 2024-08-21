@@ -154,7 +154,7 @@ class Google(Driver_class):
         
         download_dir = f'/home/{get_local_username()}/Downloads'
         # self.random_sleep(15,20)
-            
+
         while True:
             matched_file, similarity_score = find_closest_match(data['title'], download_dir)
             file_path = os.path.join(download_dir, matched_file)
