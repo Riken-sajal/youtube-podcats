@@ -26,9 +26,9 @@ class Command(BaseCommand):
                     first_upload = False
                 
                 time.sleep(1)
-        
-        thread = threading.Thread(target=run_podcast_upload)
-        thread.daemon = True 
-        thread.start()
+        run_podcast_upload()
+        # thread = threading.Thread(target=run_podcast_upload)
+        # thread.daemon = True 
+        # thread.start()
 
-        self.stdout.write("Podcast upload command started in the background.")
+        # self.stdout.write("Podcast upload command started in the background.")
