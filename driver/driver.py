@@ -67,7 +67,7 @@ class Driver_class():
             # "safebrowsing.enabled": True  # Enable safe browsing
         }
         
-        self.options.add_experimental_option("prefs", prefs)
+        # self.options.add_experimental_option("prefs", prefs)
 
         if Apple_profile :
             

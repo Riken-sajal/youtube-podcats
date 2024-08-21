@@ -39,6 +39,7 @@ class Command(BaseCommand):
     help = 'Upload podcast'
 
     def handle(self, *args, **kwargs):
+        
         self.exists_videos_url = AudioFile.objects.values_list('youtube_url', flat=True) 
         metadata = self.download_video(self.get_video_link())
         if metadata :
@@ -87,6 +88,8 @@ class Command(BaseCommand):
             file_path = os.path.join(download_dir, matched_file)
             
             while True:
+                matched_file, similarity_score = find_closest_match(data['title'], download_dir)
+                
                 # Refresh the list of files in the directory to check the current state
                 current_files = os.listdir(download_dir)
                 
@@ -109,7 +112,11 @@ class Command(BaseCommand):
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
         
-                
+        file_path = file_path.replace('.crdownload','')
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        
+        os.path.exists(file_path)
         os.rename(file_path, new_video_path)
         data['file_path'] = new_video_path
         audio = MP3(new_video_path)
