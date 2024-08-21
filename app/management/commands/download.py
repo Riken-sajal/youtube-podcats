@@ -80,35 +80,29 @@ class Command(BaseCommand):
         data = Google_class.videos_data(self.video_object.url)
         Google_class.download_videos(self.video_object.url)
         
-        download_dir = f'/home/{LOCAL_USERNAME}/Downloads'
-        matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-        
-        file_path = os.path.join(download_dir, matched_file)
-
-        if matched_file:
+        download_dir = f'/home/{get_local_username()}/Downloads'
+        # self.random_sleep(15,20)
             
-
-            while True:
-                matched_file, similarity_score = find_closest_match(data['title'], download_dir)
-                
-                # Refresh the list of files in the directory to check the current state
-                current_files = os.listdir(download_dir)
-                
-                # Check if the matching file (excluding .crdownload) is present in the directory
-                if matched_file in current_files and ".crdownload" not in matched_file:
-                    print(f"Found and matched file: {file_path}")
-                    break
-                
-                # Check for the .crdownload version of the matched file
-                crdownload_file = matched_file + ".crdownload"
-                if crdownload_file in current_files:
-                    print("File is still downloading, waiting for completion...")
-                else:
-                    print("File not found or download might have failed.")
-                
-                time.sleep(3)  # Wait for 3 seconds before checking again
-        else:
-            print("No close match found.")
+        while True:
+            matched_file, similarity_score = find_closest_match(data['title'], download_dir)
+            file_path = os.path.join(download_dir, matched_file)
+            
+            # Refresh the list of files in the directory to check the current state
+            current_files = os.listdir(download_dir)
+            
+            # Check if the matching file (excluding .crdownload) is present in the directory
+            if matched_file in current_files and ".crdownload" not in matched_file:
+                print(f"Found and matched file: {file_path}")
+                break
+            
+            # Check for the .crdownload version of the matched file
+            crdownload_file = matched_file + ".crdownload"
+            if crdownload_file in current_files:
+                print("File is still downloading, waiting for completion...")
+            else:
+                print("File not found or download might have failed.")
+            
+            time.sleep(3)  # Wait for 3 seconds before checking again
         
         new_name = self.video_object.url.split('=')[-1]
         new_video_path = os.path.join(output_dir, f"{new_name}.mp3")
