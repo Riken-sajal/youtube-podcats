@@ -20,7 +20,7 @@ class Command(BaseCommand):
                     last_login_time = current_time
                 
                 if ((current_time - last_upload_time).total_seconds() >= 10 * 60 * 60) or first_upload:
-                    # podcast_class.upload()
+                    podcast_class.upload()
                     podcast_class.publish()
                     last_upload_time = current_time
                     first_upload = False

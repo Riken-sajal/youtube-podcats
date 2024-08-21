@@ -1,8 +1,8 @@
 
-# APPLE_USERNAME="wande4er777@gmail.com"
-# APPLE_PASSWORD="Wanderer@1234"
-APPLE_USERNAME="remi@lascauxmedia.group"
-APPLE_PASSWORD="Salut@10!!"
+APPLE_USERNAME="wande4er777@gmail.com"
+APPLE_PASSWORD="Wanderer@1234"
+# APPLE_USERNAME="remi@lascauxmedia.group"
+# APPLE_PASSWORD="Salut@10!!"
 HEADLESS=True
 SERVER_IP="http://15.164.187.251:8000/"
 GOOGLE_EMAIL="pmyjtb7021"
