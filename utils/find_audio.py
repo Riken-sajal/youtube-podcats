@@ -4,17 +4,18 @@ from fuzzywuzzy import process
 
 
 def find_closest_match(title, directory):
-    while True :
-            # List all files in the directory
-            files = os.listdir(directory)
-            
-            # Get the best match based on fuzzy matching
-            matched_file, score = process.extractOne(title, files)
-            
-            if score > 75:  # You can adjust this threshold
-                return matched_file, score
-            
-            time.sleep(2)
+    # List all files in the directory
+    files = os.listdir(directory)
+    
+    # Get the best match based on fuzzy matching
+    matched_file, score = process.extractOne(title, files)
+    
+    if score > 75:  # You can adjust this threshold
+        return matched_file, score
+    
+    time.sleep(2)
+    return False, False
+        
 
 def find_from_downloads(title):
 
@@ -22,6 +23,9 @@ def find_from_downloads(title):
     # self.random_sleep(15,20)
         
     matched_file, similarity_score = find_closest_match(title, download_dir)
+    if not matched_file  :
+        return download_dir, file_path, False
+        
     file_path = os.path.join(download_dir, matched_file)
     
     # Refresh the list of files in the directory to check the current state
@@ -51,6 +55,9 @@ def find_from_ownpath(title):
     # self.random_sleep(15,20)
         
     matched_file, similarity_score = find_closest_match(title, download_dir)
+    if not matched_file  :
+        return download_dir, file_path, False
+    
     file_path = os.path.join(download_dir, matched_file)
     
     # Refresh the list of files in the directory to check the current state
