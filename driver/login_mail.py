@@ -141,10 +141,10 @@ class Google(Driver_class):
         
         while True :
             
-            download_dir, file_path, found = find_from_downloads()
+            download_dir, file_path, found = find_from_downloads(data['title'])
             if found : break
             
-            download_dir, file_path, found = find_from_ownpath()
+            download_dir, file_path, found = find_from_ownpath(data['title'])
             if found : break
         
         # download_dir = f'/home/{get_local_username()}/Downloads'
