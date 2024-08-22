@@ -57,7 +57,7 @@ class GenerateRSSFeed(View):
         if not audio_files :
             return JsonResponse({'error': f'Error : No episode has been found'}, status=400)
         
-        base_url = request.build_absolute_uri('/')[:-1]
+        base_url = "http://15.164.187.251:8000"
         rss_feed_content = create_rss_feed(audio_files, base_url)
         return HttpResponse(rss_feed_content, content_type='application/rss+xml')
 
