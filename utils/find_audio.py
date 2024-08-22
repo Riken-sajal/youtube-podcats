@@ -74,4 +74,3 @@ def find_from_ownpath(title):
         time.sleep(3) 
         return download_dir, file_path, False 
         
-find_from_ownpath('ppp')
