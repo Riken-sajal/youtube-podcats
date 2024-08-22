@@ -6,7 +6,8 @@ from fuzzywuzzy import process
 def find_closest_match(title, directory):
     # List all files in the directory
     files = os.listdir(directory)
-    
+    if not files :
+        return False, False
     # Get the best match based on fuzzy matching
     matched_file, score = process.extractOne(title, files)
     
