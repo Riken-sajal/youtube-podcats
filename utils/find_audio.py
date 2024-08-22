@@ -19,7 +19,7 @@ def find_closest_match(title, directory):
         
 
 def find_from_downloads(title):
-
+    file_path = ""
     download_dir = f'/home/{LOCAL_USERNAME}/Downloads'
     # self.random_sleep(15,20)
         
