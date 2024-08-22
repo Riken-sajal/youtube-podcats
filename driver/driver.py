@@ -80,8 +80,6 @@ class Driver_class():
             self.options.add_argument(
                 f"--user-data-dir={profile_directory_path}")
             self.options.add_argument(r'--profile-directory=Profile 1')
-        # else :
-        #     self.options.add_argument("--incognito")
 
         return  self.options
 
@@ -92,7 +90,6 @@ class Driver_class():
         if self.google_profile :
             self.options = uc.ChromeOptions()
             self.options.add_argument("--headless") if HEADLESS else None
-# 
             self.options.add_argument(f"download.default_directory={DOWNLOAD_DIR}")
             self.options.add_argument(f"--user-data-dir=Google_Profile ")
             self.options.add_argument(f'--profile-directory=1000')
