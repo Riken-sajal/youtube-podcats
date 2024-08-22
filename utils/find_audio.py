@@ -1,4 +1,4 @@
-LOCAL_USERNAME = "rk"
+from config import LOCAL_USERNAME 
 import os, time
 from fuzzywuzzy import process
 
